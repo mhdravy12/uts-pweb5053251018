@@ -4,7 +4,9 @@
    ===================================================== */
 let transaksi = [];   // semua transaksi
 
-
+/* =====================================================
+   ELEMEN HTML YANG DIPAKAI
+   ===================================================== */
 const formTransaksi = document.getElementById("form-transaksi");
 const isiTabel = document.getElementById("isi-tabel");
 
@@ -23,7 +25,7 @@ function tanggalHariIni() {
   return sekarang.getFullYear() + "-" + bulan + "-" + hari;
 }
 
-/* tambah transaksi */
+/* tambah transaksi*/
 formTransaksi.addEventListener("submit", function (e) {
   e.preventDefault(); // cegah halaman reload
 
@@ -39,12 +41,13 @@ formTransaksi.addEventListener("submit", function (e) {
     catatan: document.getElementById("catatan").value.trim(),
   });
 
+  simpanData(); // W4
   render();     // W2
   formTransaksi.reset();
   document.getElementById("tanggal").value = tanggalHariIni();
 });
 
-/* daftar transaksi*/
+/* w2 daftar transaksi*/
 function renderDaftar() {
   isiTabel.replaceChildren(); // kosongkan dulu supaya tidak dobel
 
@@ -88,6 +91,33 @@ function render() {
   renderDaftar();
 }
 
+/* w3 hapus transaksi*/
+isiTabel.addEventListener("click", function (e) {
+  const id = e.target.dataset.id; // hanya tombol Hapus yang punya data-id
+  if (!id) return;
+
+  if (confirm("Yakin ingin menghapus transaksi ini?")) {
+    transaksi = transaksi.filter((t) => t.id !== Number(id)); // id dari dataset berupa teks
+    simpanData(); // W4
+    render();
+  }
+});
+
+/* w4 local storage*/
+function simpanData() {
+  localStorage.setItem("transaksi", JSON.stringify(transaksi)); // array -> teks
+}
+
+function muatData() {
+  try {
+    const teks = localStorage.getItem("transaksi");
+    if (teks) transaksi = JSON.parse(teks);                      // teks -> array
+  } catch {
+    transaksi = []; // kalau isinya rusak, mulai dari kosong
+  }
+}
+
 /* mulai*/
 document.getElementById("tanggal").value = tanggalHariIni();
+muatData(); // baca data tersimpan DULU, baru tampilkan
 render();
