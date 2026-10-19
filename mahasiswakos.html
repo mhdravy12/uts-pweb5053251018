@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Catatan keuangan untuk mahasiswa kos: pantau uang bulanan dan jatah harian.">
+  <meta property="og:title" content="Catatan Keuangan Mahasiswa Kos">
+  <meta property="og:description" content="Pantau uang bulanan, jatah harian, dan semua pengeluaran.">
+  <title>Catatan Keuangan Kos</title>
+  <link rel="stylesheet" href="style.css">
+   <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <h1>Catatan Keuangan Kos</h1>
+    <nav class="menu" aria-label="Navigasi utama">
+      <a href="#ringkasan">Ringkasan</a>
+      <a href="#jatah">Jatah Harian</a>
+      <a href="#tambah">Tambah</a>
+      <a href="#riwayat">Riwayat</a>
+    </nav>
+  </header>
+
+  <main class="halaman">
+
+    <!-- W5: RINGKASAN -->
+    <section id="ringkasan" aria-labelledby="judul-ringkasan">
+      <h2 id="judul-ringkasan">Ringkasan</h2>
+      <div class="kartu-grid">
+        <article class="kartu">
+          <h3>Saldo</h3>
+          <p class="angka" id="total-saldo">Rp 0</p>
+        </article>
+        <article class="kartu">
+          <h3>Total Pemasukan</h3>
+          <p class="angka masuk" id="total-pemasukan">Rp 0</p>
+        </article>
+        <article class="kartu">
+          <h3>Total Pengeluaran</h3>
+          <p class="angka keluar" id="total-pengeluaran">Rp 0</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- FITUR KHAS: UANG BULANAN + JATAH HARIAN -->
+    <section id="jatah" aria-labelledby="judul-jatah">
+      <h2 id="judul-jatah">Uang Bulanan dan Jatah Harian</h2>
+
+      <form id="form-uang-bulanan" class="form-baris" novalidate>
+        <div class="field">
+          <label for="uang-bulanan">Uang bulanan dari orang tua (Rp)</label>
+          <input type="number" id="uang-bulanan" name="uangBulanan" min="1" step="1" inputmode="numeric" placeholder="1500000">
+        </div>
+        <button type="submit" class="tombol tombol-utama">Simpan uang bulanan</button>
+      </form>
+      <p id="pesan-uang-bulanan" class="pesan" role="alert"></p>
+
+      <div class="kartu-grid">
+        <article class="kartu">
+          <h3>Sisa uang bulan ini</h3>
+          <p class="angka" id="sisa-uang">Rp 0</p>
+        </article>
+        <article class="kartu">
+          <h3>Sisa hari bulan ini</h3>
+          <p class="angka" id="sisa-hari">0 hari</p>
+        </article>
+        <article class="kartu kartu-utama">
+          <h3>Jatah harian</h3>
+          <p class="angka" id="jatah-harian">Rp 0</p>
+        </article>
+        <article class="kartu">
+          <h3>Pengeluaran hari ini</h3>
+          <p class="angka keluar" id="pengeluaran-hari-ini">Rp 0</p>
+        </article>
+      </div>
+
+      <!-- Muncul hanya kalau pengeluaran hari ini melebihi jatah (atribut hidden dilepas oleh JS) -->
+      <p id="peringatan" class="peringatan" role="alert" hidden>
+        Pengeluaran hari ini sudah melebihi jatah harian!
+      </p>
+    </section>
+
+    <!-- W1 + W6: FORM TAMBAH TRANSAKSI -->
+    <section id="tambah" aria-labelledby="judul-tambah">
+      <h2 id="judul-tambah">Tambah Transaksi</h2>
+      <form id="form-transaksi" class="form" novalidate>
+        <div class="field">
+          <label for="tanggal">Tanggal</label>
+          <input type="date" id="tanggal" name="tanggal" required>
+        </div>
+        <div class="field">
+          <label for="jenis">Jenis</label>
+          <select id="jenis" name="jenis">
+            <option value="pengeluaran">Pengeluaran</option>
+            <option value="pemasukan">Pemasukan</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="kategori">Kategori</label>
+          <select id="kategori" name="kategori">
+            <option value="Makan">Makan</option>
+            <option value="Transport">Transport</option>
+            <option value="Kos dan Tagihan">Kos dan Tagihan</option>
+            <option value="Belanja">Belanja</option>
+            <option value="Hiburan">Hiburan</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="nominal">Nominal (Rp)</label>
+          <input type="number" id="nominal" name="nominal" min="1" step="1" inputmode="numeric" placeholder="25000" required>
+        </div>
+
+        <div class="field field-lebar">
+          <label for="catatan">Catatan (opsional)</label>
+          <input type="text" id="catatan" name="catatan" placeholder="Contoh: Nasi goreng">
+        </div>
+        <div class="field field-aksi">
+          <button type="submit" id="tombol-simpan" class="tombol tombol-utama">Simpan</button>
+        </div>
+      </form>
+      <p id="pesan-form" class="pesan" role="alert"></p>
+    </section>
+
+    <!-- W2 + W3: RIWAYAT (diisi JavaScript) -->
+    <section id="riwayat" aria-labelledby="judul-riwayat">
+      <h2 id="judul-riwayat">Riwayat Transaksi</h2>
+
+      <div class="tabel-bungkus">
+        <table class="tabel">
+          <caption class="sr-only">Daftar transaksi keuangan</caption>
+          <thead>
+            <tr>
+              <th scope="col">Tanggal</th>
+              <th scope="col">Kategori</th>
+              <th scope="col">Catatan</th>
+              <th scope="col" class="kanan">Nominal</th>
+              <th scope="col">Aksi</th>
+            </tr>
+          </thead>
+          <!-- Baris diisi oleh renderDaftar() di JavaScript -->
+          <tbody id="isi-tabel"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Catatan Keuangan Kos. Data tersimpan di browser (localStorage).</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,227 @@
+/* =====================================================
+   TEMA: ubah 3 nilai ini untuk mengganti skema warna.
+   Mode gelap juga cukup mengubah 3 nilai.
+   ===================================================== */
+:root {
+  --latar: #f7f8fa;
+  --teks:  #1f2933;
+  --aksen: #2563eb;
+
+  /* Diturunkan otomatis dari 3 nilai di atas */
+  --kartu: color-mix(in srgb, var(--teks) 5%, var(--latar));
+  --garis: color-mix(in srgb, var(--teks) 18%, var(--latar));
+  --teks-redup: color-mix(in srgb, var(--teks) 65%, var(--latar));
+
+  /* Warna makna */
+  --masuk:  #1f9d55;
+  --keluar: #d64545;
+
+  --radius: 0.5rem;
+  --jarak: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --latar: #14171c;
+    --teks:  #e8ebef;
+    --aksen: #6ea0ff;
+  }
+}
+
+/* ---------- DASAR ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--latar);
+  color: var(--teks);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+h1, h2, h3 { line-height: 1.2; margin: 0 0 0.75rem; }
+h2 { font-size: 1.375rem; }
+h3 { font-size: 0.9375rem; color: var(--teks-redup); font-weight: 600; }
+
+section { margin-bottom: 2.5rem; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+/* ---------- HEADER ---------- */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--kartu);
+  border-bottom: 1px solid var(--garis);
+}
+.header h1 { margin: 0; font-size: 1.25rem; color: var(--aksen); }
+
+.menu { margin-left: auto; display: flex; flex-wrap: wrap; gap: 1rem; }
+.menu a { color: var(--teks); text-decoration: none; font-size: 0.875rem; }
+.menu a:hover { color: var(--aksen); text-decoration: underline; }
+
+/* ---------- HALAMAN ---------- */
+.halaman {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* ---------- KARTU: grid responsif tanpa @media ---------- */
+.kartu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--jarak);
+}
+.kartu {
+  padding: 1.25rem;
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+}
+.kartu-utama { border: 2px solid var(--aksen); }
+
+.angka { margin: 0; font-size: 1.5rem; font-weight: 700; overflow-wrap: anywhere; }
+.angka.masuk  { color: var(--masuk); }
+.angka.keluar { color: var(--keluar); }
+
+/* ---------- FORM ---------- */
+.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--jarak);
+  align-items: end;
+  padding: 1.25rem;
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+}
+
+/* Form uang bulanan: satu baris (input + tombol) */
+.form-baris {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--jarak);
+  margin-bottom: 0.5rem;
+  padding: 1.25rem;
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+}
+.form-baris .field { flex: 1 1 14rem; }
+
+.field { display: flex; flex-direction: column; gap: 0.25rem; }
+.field label { font-size: 0.875rem; font-weight: 600; }
+.field-aksi { flex-direction: row; gap: 0.5rem; }
+
+@media (min-width: 40rem) {
+  .field-lebar { grid-column: span 2; }   /* hanya melebar kalau ruang cukup */
+}
+
+/* Form transaksi: 4 kolom di layar lebar.
+   Baris 1: Tanggal, Jenis, Kategori, Nominal. Baris 2: Catatan (3 kolom), Simpan. */
+@media (min-width: 48rem) {
+  .form { grid-template-columns: repeat(4, 1fr); }
+  .form .field-lebar { grid-column: span 3; }
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+  color: var(--teks);
+  background: var(--latar);
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+}
+
+/* ---------- PESAN & PERINGATAN ---------- */
+.pesan { min-height: 1.5rem; margin: 0.5rem 0 1rem; font-size: 0.9rem; }
+.pesan.galat  { color: var(--keluar); }
+.pesan.sukses { color: var(--masuk); }
+
+.peringatan {
+  margin: 1rem 0 0;
+  padding: 0.9rem 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--keluar);
+  border-radius: var(--radius);
+}
+.peringatan[hidden] { display: none; }   /* class di atas tidak boleh mengalahkan atribut hidden */
+
+/* ---------- TOMBOL ---------- */
+.tombol {
+  padding: 0.55rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--teks);
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.tombol:hover { border-color: var(--aksen); }
+
+.tombol-utama { color: #fff; background: var(--aksen); border-color: var(--aksen); }
+.tombol-utama:hover { filter: brightness(1.1); }
+
+.tombol-hapus {
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--keluar);
+  background: transparent;
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.tombol-hapus:hover { border-color: var(--keluar); }
+
+/* ---------- TABEL ---------- */
+.tabel-bungkus {
+  margin-top: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+}
+.tabel { width: 100%; min-width: 36rem; border-collapse: collapse; }
+.tabel th,
+.tabel td { padding: 0.7rem 0.9rem; text-align: left; border-bottom: 1px solid var(--garis); }
+.tabel thead th { background: var(--kartu); font-size: 0.875rem; }
+.tabel tbody tr:last-child > * { border-bottom: 0; }
+.tabel .kanan { text-align: right; }
+
+.nominal-masuk  { color: var(--masuk); font-weight: 600; }
+.nominal-keluar { color: var(--keluar); font-weight: 600; }
+.kosong { color: var(--teks-redup); font-style: italic; }
+
+/* ---------- FOOTER ---------- */
+.footer {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--teks-redup);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--garis);
+}
